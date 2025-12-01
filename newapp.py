@@ -78,9 +78,7 @@ if True:
             .top-left-logo, .top-left-logo * {{
                 visibility: visible !important;
             }}
-    
-            /* Space so content doesn't overlap */
-            .app-body-padding {{ padding-top: 220px !important; }}
+
     
             @media (max-width:80px) {{
                 .top-left-logo img {{ max-width: 80px !important; max-height: 80px !important; }}
@@ -277,6 +275,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
