@@ -37,10 +37,7 @@ if True:
         st.markdown(
             f"""
             <style>
-            html{{
-                overflow: visible !important;
-                transform: none !important;
-            }}
+
             [class*="stImage"], [class*="element"], [class*="block"], .css-1d391kg, .css-1outpf7 {{
                 overflow: visible !important;
                 height: auto !important;
@@ -275,6 +272,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
