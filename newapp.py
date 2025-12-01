@@ -33,27 +33,20 @@ if True:
         return f"data:{mime};base64,{b64}"
 
     img_data_uri = file_to_base64(LOGO_PATH)
-
-    # Paste this replacing your current logo st.markdown(...) block
-if img_data_uri:
+    if img_data_uri:
     st.markdown(
         f"""
         <style>
-        /* Force containers to allow visible fixed children (very aggressive) */
         html, body, .stApp, .main, .block-container, .reportview-container, .appview-container, iframe {{
             overflow: visible !important;
             transform: none !important;
         }}
-
-        /* Also clear any streamlit inner wrappers that might clip */
         [class*="stImage"], [class*="element"], [class*="block"], .css-1d391kg, .css-1outpf7 {{
             overflow: visible !important;
             height: auto !important;
             max-height: none !important;
             min-height: 0 !important;
         }}
-
-        /* Floating logo container */
         .top-left-logo {{
             position: fixed !important;
             top: 16px !important;
@@ -67,14 +60,12 @@ if img_data_uri:
             box-shadow: 0 8px 22px rgba(0,0,0,0.30) !important;
             line-height: 0 !important;
         }}
-
-        /* Image: preserve full image and never crop */
         .top-left-logo img, .top-left-logo img[alt="LawGPT Logo"] {{
             display: block !important;
             width: auto !important;
             height: auto !important;
-            max-width: 220px !important;
-            max-height: 220px !important;
+            max-width: 80px !important;
+            max-height: 80px !important;
             object-fit: contain !important;
             -o-object-fit: contain !important;
             border-radius: 6px !important;
@@ -84,7 +75,6 @@ if img_data_uri:
             background: transparent !important;
         }}
 
-        /* Ensure visibility */
         .top-left-logo, .top-left-logo * {{
             visibility: visible !important;
         }}
@@ -287,6 +277,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
