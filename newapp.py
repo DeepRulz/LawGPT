@@ -82,9 +82,9 @@ if True:
             /* Space so content doesn't overlap */
             .app-body-padding {{ padding-top: 220px !important; }}
     
-            @media (max-width:900px) {{
-                .top-left-logo img {{ max-width: 120px !important; max-height: 120px !important; }}
-                .app-body-padding {{ padding-top: 140px !important; }}
+            @media (max-width:80px) {{
+                .top-left-logo img {{ max-width: 80px !important; max-height: 80px !important; }}
+                .app-body-padding {{ padding-top: 20px !important; }}
                 .top-left-logo {{ left: 12px !important; top: 12px !important; padding: 8px !important; }}
             }}
             </style>
@@ -277,6 +277,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
