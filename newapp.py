@@ -37,7 +37,7 @@ if True:
         st.markdown(
             f"""
             <style>
-            html, body, .stApp {{
+            html{{
                 overflow: visible !important;
                 transform: none !important;
             }}
@@ -275,6 +275,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
