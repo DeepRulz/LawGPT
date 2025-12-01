@@ -34,68 +34,68 @@ if True:
 
     img_data_uri = file_to_base64(LOGO_PATH)
     if img_data_uri:
-    st.markdown(
-        f"""
-        <style>
-        html, body, .stApp, .main, .block-container, .reportview-container, .appview-container, iframe {{
-            overflow: visible !important;
-            transform: none !important;
-        }}
-        [class*="stImage"], [class*="element"], [class*="block"], .css-1d391kg, .css-1outpf7 {{
-            overflow: visible !important;
-            height: auto !important;
-            max-height: none !important;
-            min-height: 0 !important;
-        }}
-        .top-left-logo {{
-            position: fixed !important;
-            top: 16px !important;
-            left: 16px !important;
-            z-index: 2147483647 !important; /* topmost */
-            overflow: visible !important;
-            background: #fff !important;
-            border-radius: 10px !important;
-            padding: 10px !important;
-            display: inline-block !important;
-            box-shadow: 0 8px 22px rgba(0,0,0,0.30) !important;
-            line-height: 0 !important;
-        }}
-        .top-left-logo img, .top-left-logo img[alt="LawGPT Logo"] {{
-            display: block !important;
-            width: auto !important;
-            height: auto !important;
-            max-width: 80px !important;
-            max-height: 80px !important;
-            object-fit: contain !important;
-            -o-object-fit: contain !important;
-            border-radius: 6px !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-            background: transparent !important;
-        }}
-
-        .top-left-logo, .top-left-logo * {{
-            visibility: visible !important;
-        }}
-
-        /* Space so content doesn't overlap */
-        .app-body-padding {{ padding-top: 220px !important; }}
-
-        @media (max-width:900px) {{
-            .top-left-logo img {{ max-width: 120px !important; max-height: 120px !important; }}
-            .app-body-padding {{ padding-top: 140px !important; }}
-            .top-left-logo {{ left: 12px !important; top: 12px !important; padding: 8px !important; }}
-        }}
-        </style>
-
-        <div class="top-left-logo">
-            <img src="{img_data_uri}" alt="LawGPT Logo" />
-        </div>
-        <div class="app-body-padding"></div>
-        """,
-        unsafe_allow_html=True,
-    )
+        st.markdown(
+            f"""
+            <style>
+            html, body, .stApp, .main, .block-container, .reportview-container, .appview-container, iframe {{
+                overflow: visible !important;
+                transform: none !important;
+            }}
+            [class*="stImage"], [class*="element"], [class*="block"], .css-1d391kg, .css-1outpf7 {{
+                overflow: visible !important;
+                height: auto !important;
+                max-height: none !important;
+                min-height: 0 !important;
+            }}
+            .top-left-logo {{
+                position: fixed !important;
+                top: 16px !important;
+                left: 16px !important;
+                z-index: 2147483647 !important; /* topmost */
+                overflow: visible !important;
+                background: #fff !important;
+                border-radius: 10px !important;
+                padding: 10px !important;
+                display: inline-block !important;
+                box-shadow: 0 8px 22px rgba(0,0,0,0.30) !important;
+                line-height: 0 !important;
+            }}
+            .top-left-logo img, .top-left-logo img[alt="LawGPT Logo"] {{
+                display: block !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: 80px !important;
+                max-height: 80px !important;
+                object-fit: contain !important;
+                -o-object-fit: contain !important;
+                border-radius: 6px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+                background: transparent !important;
+            }}
+    
+            .top-left-logo, .top-left-logo * {{
+                visibility: visible !important;
+            }}
+    
+            /* Space so content doesn't overlap */
+            .app-body-padding {{ padding-top: 220px !important; }}
+    
+            @media (max-width:900px) {{
+                .top-left-logo img {{ max-width: 120px !important; max-height: 120px !important; }}
+                .app-body-padding {{ padding-top: 140px !important; }}
+                .top-left-logo {{ left: 12px !important; top: 12px !important; padding: 8px !important; }}
+            }}
+            </style>
+    
+            <div class="top-left-logo">
+                <img src="{img_data_uri}" alt="LawGPT Logo" />
+            </div>
+            <div class="app-body-padding"></div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 st.title("Legal Assistant")
@@ -277,6 +277,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
