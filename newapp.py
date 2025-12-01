@@ -47,6 +47,7 @@ if True:
                 padding: 6px;
                 background: rgba(255,255,255,0.02);
                 box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+                overflow:visible;
             }}
             .top-left-logo img {{
                 height: 100px;
@@ -249,3 +250,4 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
