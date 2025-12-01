@@ -78,8 +78,8 @@ if True:
             .top-left-logo, .top-left-logo * {{
                 visibility: visible !important;
             }}
-
-    
+            .app-body-padding {{ padding-top: 8px !important; }}
+            
             @media (max-width:80px) {{
                 .top-left-logo img {{ max-width: 80px !important; max-height: 80px !important; }}
                 .app-body-padding {{ padding-top: 20px !important; }}
@@ -275,6 +275,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
