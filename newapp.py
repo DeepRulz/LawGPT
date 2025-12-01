@@ -38,7 +38,7 @@ if True:
             f"""
             <style>
 
-            [class*="stImage"], [class*="element"], [class*="block"], .css-1d391kg, .css-1outpf7 {{
+            [class*="stImage"]{{
                 overflow: visible !important;
                 height: auto !important;
                 max-height: none !important;
@@ -272,6 +272,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
