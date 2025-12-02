@@ -8,7 +8,7 @@ import streamlit as st
 from sentence_transformers import SentenceTransformer
 import faiss
 
-st.set_page_config(page_title="Legal Assistant")
+st.set_page_config(page_title="LawGPT")
 
 GROQ_API_KEY = st.secrets.get("groq_api_key", None)
 
@@ -272,6 +272,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
