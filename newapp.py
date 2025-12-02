@@ -93,7 +93,7 @@ if True:
         )
 
 
-st.title("Legal Assistant")
+st.title("LawGPT")
 
 st.markdown(
     """
@@ -272,6 +272,7 @@ if query:
                 st.session_state.chat.append(("ai", full_response))
 
 # ------------------- END -------------------
+
 
 
 
