@@ -2,3 +2,4 @@ sentence_transformers
 faiss-cpu
 together
 streamlit
+pytz

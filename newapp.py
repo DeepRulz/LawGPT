@@ -7,12 +7,57 @@ import pickle
 import streamlit as st
 from sentence_transformers import SentenceTransformer
 import faiss
+import re
+import uuid
+from datetime import datetime
+import pytz
+IST=pytz.timezone("Asia/Kolkata")
+timestamp = datetime.now(IST).isoformat()
+def extract_section_number(query):
+    patterns = [
+        r"section\s*(\d+[a-zA-Z]?)",
+        r"sec\.?\s*(\d+[a-zA-Z]?)",
+        r"\bs\s*(\d+[a-zA-Z]?)\b"
+    ]
+    for p in patterns:
+        m = re.search(p, query, re.IGNORECASE)
+        if m:
+            return m.group(1)
+    return None
+
+def get_section_by_number(section_no, sections):
+    for s in sections:
+        if s.get("section") == section_no:
+            return s
+    return None
+
+def trim_text(text, max_chars=1200):
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars] + "\n[Text truncated]"
+
 
 st.set_page_config(page_title="LawGPT")
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
 
 GROQ_API_KEY = st.secrets.get("groq_api_key", None)
-
 GROQ_MODEL = "openai/gpt-oss-120b"
+LOG_ENDPOINT = "https://script.google.com/macros/s/AKfycbzLUiCszELWypEaOuqADuRb-0s8kqpgxSDDOLXt9puHxZp9Kk7f43aKNcWSynle2OyzMQ/exec"
+
+def log_query(query, response, success):
+    payload = {
+        "timestamp": timestamp,
+        "session_id": st.session_state.session_id,
+        "act": act_choice,
+        "query": query,
+        "response": response[:1500],  # safety cap
+        "success": success
+    }
+    try:
+        requests.post(LOG_ENDPOINT, json=payload, timeout=2)
+    except:
+        pass  # logging must never break the app
 
 if True:
     LOGO_PATH = "LawGPTLogo.jpg"
@@ -91,9 +136,11 @@ if True:
             """,
             unsafe_allow_html=True,
         )
-
-
 st.title("LawGPT")
+st.caption(
+    "⚠️ Academic Beta • Supports CPC, RTI Act & Consumer Protection Act only. "
+    "Answers may be incomplete. Verify with bare acts."
+)
 
 st.markdown(
     """
@@ -106,16 +153,19 @@ st.markdown(
         background-color: #0e1117;
         color: gray;
         text-align: center;
-        padding: 8px;
+        padding: 5px;
         font-size: 0.85rem;
+        
         z-index: 100;
         border-top: 1px solid #333;
     }
     .footer a { color: #3399ff; text-decoration: none; }
+    
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 footer_container = st.container()
 with footer_container:
@@ -123,6 +173,7 @@ with footer_container:
         """
         <div class="footer">
             Created by <a href="https://www.linkedin.com/in/deepshah2712/" target="_blank">Deep Shah</a>
+            <br>Feedback/Report Issues at this <a href="https://forms.gle/n4813gmUfCBNaSPv9" target="_blank">Form</a>
         </div>
         """,
         unsafe_allow_html=True,
@@ -152,7 +203,7 @@ except Exception as e:
     st.stop()
 
 # ------------------- FAISS SEARCH -------------------
-def search_faiss(query, k=7):
+def search_faiss(query, k=3):
     query_vec = model.encode([query]).astype("float32")
     D, I = index.search(query_vec, k)
     results = []
@@ -164,7 +215,7 @@ def search_faiss(query, k=7):
     return results
 
 # ------------------- GROQ CALL -------------------
-def ask_groq(query, sections, temperature=0.2, max_tokens=8192):
+def ask_groq(query, sections, temperature=0.2, max_tokens=1200):
     """
     Minimal Groq chat-completions call using the OpenAI-compatible endpoint.
     Endpoint used: https://api.groq.com/openai/v1/chat/completions
@@ -173,13 +224,28 @@ def ask_groq(query, sections, temperature=0.2, max_tokens=8192):
     if not GROQ_API_KEY:
         return "❌ Groq API key not found in Streamlit secrets (st.secrets['groq_api_key'])."
 
-    context = "\n\n".join([f"Section {s.get('section','?')} - {s.get('title','')}\n{s.get('text','')}" for s in sections])
+    context = "\n\n".join([
+        f"Section {s.get('section', '?')} - {s.get('title', '')}\n{trim_text(s.get('text', ''))}"
+        for s in sections
+    ])
+
     prompt = f"""
-You are a legal assistant. Based on the following sections of the {act_choice}, answer the question clearly and concisely.
+You are an academic legal assistant for Indian law students.
 
-Question: {query}
+Task:
+Explain the legal principle contained in the provided section
+in clear, student-friendly language.
 
-Relevant Sections:
+Rules:
+- Base your explanation strictly on the provided section
+- Do not introduce other sections or case law
+- Do not copy the section verbatim unless necessary
+- Structure the answer with headings and short paragraphs
+
+Question:
+{query}
+
+Relevant Statutory Text:
 {context}
 
 Answer:
@@ -238,7 +304,17 @@ if query:
 
     # search knowledge base
     with st.spinner("Searching legal knowledge base..."):
-        top_sections = search_faiss(query, k=7)
+        section_no = extract_section_number(query)
+
+        if section_no:
+            matched = get_section_by_number(section_no, sections)
+            if matched:
+                top_sections = [matched]
+                st.info(f"Direct Section match found: Section {section_no}")
+            else:
+                top_sections = []
+        else:
+            top_sections = search_faiss(query, k=3)
 
     # if no sections found, show quick message
     if not top_sections:
@@ -255,6 +331,8 @@ if query:
 
             # ask Groq
             full_response = ask_groq(query, top_sections)
+            full_response=full_response.lstrip()
+            full_response="\n".join(line.lstrip() for line in full_response.splitlines())
             # If Groq returned a clear error starting with ❌, fallback to RAG-only summary
             if full_response.startswith("❌"):
                 fallback = "Sorry — the model call failed. I searched these sections:\n\n" + "\n\n".join(
@@ -271,21 +349,15 @@ if query:
                     time.sleep(0.006)  # small delay to simulate typing
                 st.session_state.chat.append(("ai", full_response))
 
-# ------------------- END -------------------
+                log_query(
+                    query=query,
+                    response=full_response,
+                    success=not full_response.startswith("❌")
+                )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                # 🔽 Arrow / sections used
+                with st.expander("▶ Sections used"):
+                    for s in top_sections:
+                        st.markdown(
+                            f"**Section {s.get('section')} – {s.get('title')}**"
+                        )
