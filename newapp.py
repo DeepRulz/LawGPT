@@ -178,8 +178,8 @@ with footer_container:
         """,
         unsafe_allow_html=True,
     )
-
-act_choice = st.selectbox("📚 Choose a Law", ["Right To Information Act,2005", "Code of Civil Procedure,1908","Consumer Protection Act,2019"])
+acts=["Right To Information Act,2005", "Code of Civil Procedure,1908","Consumer Protection Act,2019","The Bharatiya Nyaya Sanhita, 2023","The Bharatiya Sakshya Adhiniyam, 2023","The Bharatiya Nagarik Suraksha Sanhita, 2023"]
+act_choice = st.selectbox("📚 Choose a Law",acts)
 
 @st.cache_resource
 def load_resources(act_name):
